@@ -12,7 +12,7 @@ const connection = mysql.createConnection({
   user: "root",
 
   // Your password
-  password: "(54)gOOdbOys",
+  password: "",
   database: "madeup_company_db"
 });
 
@@ -28,9 +28,9 @@ function start() {
         type: "rawlist",
         choices: [
             "View All Employees",
-            "Add Departments",
-            "Add Roles",
-            "Add Employees",
+            "Add Department",
+            "Add Role",
+            "Add Employee",
             "Update Employee Role",
             "Done"
         ]
@@ -40,13 +40,13 @@ function start() {
             case "View All Employees":
                 selectAll();
                 break;
-            case "Add Departments":
-                specificSong();
+            case "Add Department":
+                addDepartment();
                 break;
-            case "Add Roles":
+            case "Add Role":
                 sameYear();
                 break;
-            case "Add Employees":
+            case "Add Employee":
                 connection.end();
                 break;
             case "Update Employee Role":
@@ -68,15 +68,71 @@ function selectAll() {
         });
   }
 
-//   function multipleTimes() {
-//     const query = "SELECT artist FROM top5000 GROUP BY artist HAVING COUNT(*) > 1"
-//     connection.query(query, (err, res) => {
-//       if (err) throw err;
-//       console.log(res);
-//       start();
-//     });
-//   }
+  function addDepartment() {
+    inquirer.prompt({
+        name: "department",
+        type: "input",
+        message: "What department would you like to add?",
+        validate: answer => {
+            if (answer.length < 1) {
+                return "Please enter a department name."
+            }
+            return true;
+        } 
+    })
+    .then( answer => {
+    const query = "INSERT INTO department SET ?"
+    connection.query(query, {name: answer.department}, (err, res) => {
+      if (err) throw err;
+      console.log(`${answer.department} was successfully added!`);
+      start();
+    });
+  });
+};
 
+function addDepartment() {
+    inquirer.prompt({
+        name: "department",
+        type: "input",
+        message: "What department would you like to add?",
+        validate: answer => {
+            if (answer.length < 1) {
+                return "Please enter a department name."
+            }
+            return true;
+        } 
+    })
+    .then( answer => {
+    const query = "INSERT INTO department SET ?"
+    connection.query(query, {name: answer.department}, (err, res) => {
+      if (err) throw err;
+      console.log(`${answer.department} was successfully added!`);
+      start();
+    });
+  });
+};
+
+function addDepartment() {
+    inquirer.prompt({
+        name: "department",
+        type: "input",
+        message: "What department would you like to add?",
+        validate: answer => {
+            if (answer.length < 1) {
+                return "Please enter a department name."
+            }
+            return true;
+        } 
+    })
+    .then( answer => {
+    const query = "INSERT INTO department SET ?"
+    connection.query(query, {name: answer.department}, (err, res) => {
+      if (err) throw err;
+      console.log(`${answer.department} was successfully added!`);
+      start();
+    });
+  });
+};
 //   function specificRange() {
 //     inquirer.prompt([{
 //         name: "start",
