@@ -60,15 +60,15 @@ function start() {
 }
 
 function selectAll() {
-        const query = `SELECT employee.first_name, employee.last_name, role.title, role.salary, department.name FROM employee INNER JOIN role ON employee.role_id = role.id INNER JOIN department ON role.department_id = department.id`
-        connection.query(query, (err, res) => {
-        if (err) throw err;
-        console.table(res);
-        start();
-        });
+    const query = `SELECT employee.first_name, employee.last_name, role.title, role.salary, department.name FROM employee INNER JOIN role ON employee.role_id = role.id INNER JOIN department ON role.department_id = department.id`
+    connection.query(query, (err, res) => {
+    if (err) throw err;
+    console.table(res);
+    start();
+    });
   }
 
-  function addDepartment() {
+function addDepartment() {
     inquirer.prompt({
         name: "department",
         type: "input",
@@ -81,13 +81,13 @@ function selectAll() {
         } 
     })
     .then( answer => {
-    const query = "INSERT INTO department SET ?"
-    connection.query(query, {name: answer.department}, (err, res) => {
-      if (err) throw err;
-      console.log(`${answer.department} was successfully added!`);
-      start();
+        const query = "INSERT INTO department SET ?"
+        connection.query(query, {name: answer.department}, (err, res) => {
+        if (err) throw err;
+        console.log(`${answer.department} was successfully added!`);
+        start();
+        });
     });
-  });
 };
 
 function addRole() {
@@ -140,26 +140,54 @@ function addRole() {
 };
 
 function addEmployee() {
-    inquirer.prompt({
-        name: "department",
+    inquirer.prompt([{
+        name: "first_name",
         type: "input",
-        message: "What department would you like to add?",
+        message: "What is the employee's first name?",
         validate: answer => {
             if (answer.length < 1) {
-                return "Please enter a department name."
+                return "Please enter the person's first name."
             }
             return true;
         } 
-    })
+    },
+    {
+        name: "last_name",
+        type: "input",
+        message: "What is the employee's last name?",
+        validate: answer => {
+            if (answer.length < 1) {
+                return "Please enter the person's last name."
+            }
+            return true;
+        } 
+    },
+    {
+        name: "role_id",
+        type: "input",
+        message: "What is the employee's role ID?",
+        validate: answer => {
+            if (answer.length < 1) {
+                return "Please enter a role ID."
+            }
+            return true;
+        } 
+    }])
     .then( answer => {
-    const query = "INSERT INTO department SET ?"
-    connection.query(query, {name: answer.department}, (err, res) => {
+    const query = "INSERT INTO employee SET ?"
+    connection.query(query, 
+        {
+            first_name: answer.first_name,
+            last_name: answer.last_name,
+            role_id: answer.role_id
+        }, (err, res) => {
       if (err) throw err;
-      console.log(`${answer.department} was successfully added!`);
+      console.log(`${answer.first_name}, ${answer.last_name}, and ${answer.role_id} were successfully added!`);
       start();
     });
   });
 };
+
 //   function specificRange() {
 //     inquirer.prompt([{
 //         name: "start",
