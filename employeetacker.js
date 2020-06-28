@@ -44,10 +44,10 @@ function start() {
                 addDepartment();
                 break;
             case "Add Role":
-                sameYear();
+                addRole();
                 break;
             case "Add Employee":
-                connection.end();
+                addEmployee();
                 break;
             case "Update Employee Role":
                 connection.end();
@@ -90,29 +90,56 @@ function selectAll() {
   });
 };
 
-function addDepartment() {
-    inquirer.prompt({
-        name: "department",
+function addRole() {
+    inquirer.prompt([{
+        name: "title",
         type: "input",
-        message: "What department would you like to add?",
+        message: "What role would you like to add?",
         validate: answer => {
             if (answer.length < 1) {
-                return "Please enter a department name."
+                return "Please enter a role name."
             }
             return true;
         } 
-    })
+    },
+    {
+        name: "salary",
+        type: "input",
+        message: "What is the salary for this role?",
+        validate: answer => {
+            if (answer.length < 1) {
+                return "Please enter a salary."
+            }
+            return true;
+        } 
+    },
+    {
+        name: "department_id",
+        type: "input",
+        message: "What is the department ID for this role?",
+        validate: answer => {
+            if (answer.length < 1) {
+                return "Please enter a department ID."
+            }
+            return true;
+        } 
+    }])
     .then( answer => {
-    const query = "INSERT INTO department SET ?"
-    connection.query(query, {name: answer.department}, (err, res) => {
+    const query = "INSERT INTO role SET ?"
+    connection.query(query, 
+        {
+            title: answer.title,
+            salary: parseInt(answer.salary),
+            department_id: parseInt(answer.department_id)
+        }, (err, res) => {
       if (err) throw err;
-      console.log(`${answer.department} was successfully added!`);
+      console.log(`${answer.title}, ${answer.salary}, and ${answer.department_id} were successfully added!`);
       start();
     });
   });
 };
 
-function addDepartment() {
+function addEmployee() {
     inquirer.prompt({
         name: "department",
         type: "input",
