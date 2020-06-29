@@ -27,7 +27,10 @@ function start() {
         name: "actions",
         type: "rawlist",
         choices: [
-            "View All Employees",
+            "View Employees, Roles, Departments",
+            "View Just Employees",
+            "View Departments",
+            "View Roles",
             "Add Department",
             "Add Role",
             "Add Employee",
@@ -37,8 +40,17 @@ function start() {
     })
     .then(answer => {
         switch (answer.actions) {
-            case "View All Employees":
+            case "View Employees, Roles, Departments":
                 selectAll();
+                break;
+            case "View Just Employees":
+                selectEmployees();
+                break;
+            case "View Departments":
+                selectDepartments();
+                break;
+            case "View Roles":
+                selectRoles();
                 break;
             case "Add Department":
                 addDepartment();
@@ -50,7 +62,7 @@ function start() {
                 addEmployee();
                 break;
             case "Update Employee Role":
-                connection.end();
+                updateEmployeeRole();
                 break;
             case "Done":
                 connection.end();
@@ -66,7 +78,34 @@ function selectAll() {
     console.table(res);
     start();
     });
-  }
+  };
+
+  function selectDepartments() {
+    const query = `SELECT * FROM department`
+    connection.query(query, (err, res) => {
+    if (err) throw err;
+    console.table(res);
+    start();
+    });
+  };
+
+  function selectEmployees() {
+    const query = `SELECT * FROM employee`
+    connection.query(query, (err, res) => {
+    if (err) throw err;
+    console.table(res);
+    start();
+    });
+  };
+
+  function selectRoles() {
+    const query = `SELECT * FROM role`
+    connection.query(query, (err, res) => {
+    if (err) throw err;
+    console.table(res);
+    start();
+    });
+  };
 
 function addDepartment() {
     inquirer.prompt({
@@ -188,69 +227,63 @@ function addEmployee() {
   });
 };
 
-//   function specificRange() {
-//     inquirer.prompt([{
-//         name: "start",
-//         type: "input",
-//         message: "Where would you like your search to start?",
-//         validate: answer => {
-//             if (isNaN(answer) === false) {
-//                 return true;
-//             } else {
-//                 return false;
+//  function getEmployees() {
+//      return new Promise((resolve, reject) => {
+//         const query = `SELECT first_name, last_name FROM employee`;
+//         const employeeArray = [];
+    
+//         connection.query(query, (err, res) => {
+//             if (err) {
+//                 reject(new Error(err));
+//             } else{
+//                 const employeeName = res.forEach(employee => {
+//                     let names = `${employee.first_name} ${employee.last_name}`;
+//                     employeeArray.push(names);
+//                 });
+//                 resolve(employeeName);
 //             }
-//         } 
-//     },
-//     {
-//         name: "end",
-//         type: "input",
-//         message: "Where would you like your search to end?",
-//         validate: answer => {
-//             if (isNaN(answer) === false) {
-//                 return true;
-//             } else {
-//                 return false;
-//             }
-//         } 
-//     }])
-//     .then( answer => {
-//         const query = "SELECT * FROM top5000 WHERE position BETWEEN ? AND ?"
-//         connection.query(query, [answer.start, answer.end], (err, res) => {
-//         if (err) throw err;
-//         console.log(res);
-//         start();
 //         });
-//     });
-//   }
-
-//   function sameYear() {
-//     inquirer.prompt([{
-//         name: "year",
-//         type: "input",
-//         message: "What artist would you like to search?"
-//     }])
-//     .then( answer => {
-//         const query = `SELECT topAlbums.year, topAlbums.album, topAlbums.position, top5000.title, top5000.artist FROM topAlbums INNER JOIN top5000 ON topAlbums.artist = top5000.artist AND topAlbums.year = top5000.year WHERE topAlbums.artist = ? AND top5000.artist = ?`
-//         connection.query(query, [answer.year, answer.year], (err, res) => {
-//         if (err) throw err;
-//         console.log(res);
-//         start();
-//         });
-//     });
-//   }
-
-//   function specificSong() {
-//     inquirer.prompt({
-//         name: "title",
-//         type: "input",
-//         message: "What song would you like to search for?" 
 //     })
-//     .then( answer => {
-//         const query = "SELECT * FROM top5000 WHERE ?"
-//         connection.query(query, {title: answer.title}, (err, res) => {
-//         if (err) throw err;
-//         console.log(res);
-//         start();
-//         }) 
-//     });
-//   }
+//  };
+
+function updateEmployeeRole() {
+  inquirer.prompt([
+        {
+            name: "employee_first",
+            type: "input",
+            message: "What's the employee's first name that you would you like to update?"
+        },
+        {
+            name: "employee_last",
+            type: "input",
+            message: "What's the employee's last name that you would you like to update?"
+        },
+        {
+            name: "new_role_id",
+            type: "input",
+            message: "What is the new role ID for this employee?",
+            validate: answer => {
+                if (answer.length < 1) {
+                    return "Please enter the new role ID."
+                }
+                return true;
+            } 
+        }])
+        .then( answer => {
+            const query = "UPDATE employee SET ? WHERE ?";
+            connection.query(query, 
+                [{
+                    role_id: parseInt(answer.new_role_id) 
+                },
+                {
+                    first_name: answer.employee_first
+                },
+                {
+                    last_name: answer.employee_last
+                }], (err, res) => {
+                    if (err) throw err;
+                    console.log(`${answer.employee_first} ${answer.employee_last} role was updated to ${answer.new_role_id} successfully!`);
+                    start();
+                });
+        });
+};
