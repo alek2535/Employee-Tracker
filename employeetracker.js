@@ -16,12 +16,14 @@ const connection = mysql.createConnection({
   database: "madeup_company_db"
 });
 
+// Establishes connection to MySQL database
 connection.connect(err => {
   if (err) throw err;
   console.log(`connected as id ${connection.threadId}\n`);
   start();
 });
 
+// Starts Inquirer prompt to run application
 function start() {
     inquirer.prompt({
         name: "actions",
@@ -71,6 +73,7 @@ function start() {
     })
 }
 
+// MySQL query to see table for View Employees, Roles, Department option
 function selectAll() {
     const query = `SELECT employee.first_name, employee.last_name, role.title, role.salary, department.name FROM employee INNER JOIN role ON employee.role_id = role.id INNER JOIN department ON role.department_id = department.id`
     connection.query(query, (err, res) => {
@@ -80,6 +83,7 @@ function selectAll() {
     });
   };
 
+// MySQL query to see table for View Department option
   function selectDepartments() {
     const query = `SELECT * FROM department`
     connection.query(query, (err, res) => {
@@ -89,6 +93,7 @@ function selectAll() {
     });
   };
 
+// MySQL query to see table for View Just Employees option
   function selectEmployees() {
     const query = `SELECT * FROM employee`
     connection.query(query, (err, res) => {
@@ -98,6 +103,7 @@ function selectAll() {
     });
   };
 
+// MySQL query to see table for View Roles option
   function selectRoles() {
     const query = `SELECT * FROM role`
     connection.query(query, (err, res) => {
@@ -107,6 +113,7 @@ function selectAll() {
     });
   };
 
+// MySQL query and Inquirer prompt for Add Department option
 function addDepartment() {
     inquirer.prompt({
         name: "department",
@@ -129,6 +136,7 @@ function addDepartment() {
     });
 };
 
+// MySQL query and Inquirer prompt for Add Role option
 function addRole() {
     inquirer.prompt([{
         name: "title",
@@ -178,6 +186,7 @@ function addRole() {
   });
 };
 
+// MySQL query and Inquirer prompt for Add Employee option
 function addEmployee() {
     inquirer.prompt([{
         name: "first_name",
@@ -227,6 +236,7 @@ function addEmployee() {
   });
 };
 
+// Attempt to add functionality of having employees names as choices for updating employee role
 //  function getEmployees() {
 //      return new Promise((resolve, reject) => {
 //         const query = `SELECT first_name, last_name FROM employee`;
@@ -246,6 +256,7 @@ function addEmployee() {
 //     })
 //  };
 
+// MySQL query and Inquirer prompt for Update Employee Role option
 function updateEmployeeRole() {
   inquirer.prompt([
         {

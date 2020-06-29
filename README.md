@@ -47,9 +47,12 @@ So that I can organize and plan my business
 
 ## Visuals
 
-![Database Schema](Assets/schema.png)
-![Employee Tracker](Assets/employee-tracker.gif)
+Here is how the application looks:
 
+![Employee Tracker Demo](Assets/employee-tracker-demo.gif)
+
+Here is a link to the video for a better view:
+[Employee Tracker Video](https://drive.google.com/file/d/1Nf3qAOgXgl2qj1kCCYu2kNBC7oAkuFSw/view)
 
 ## Installation
 
